@@ -14,15 +14,15 @@ The controlled systems must be configured to always boot over PXE.
 Install
 -------
 
-- edit the database and PXE config in the settings.py according to
+- edit the database and PXE config in ``settings.py`` according to
   your local setup.
 
-- you need python-django installed.
+- you need ``python-django`` installed.
 
-- run ./manage.py syncdb to create the needed sql tables.
+- run ``./manage.py syncdb`` to create the needed sql tables.
 
-- create the PXE profiles in pxelinux.cfg/profiles/ ending in
-  .prof. The local.prof is mandatory and must point to a local boot
+- create the PXE profiles in ``pxelinux.cfg/profiles/`` ending in
+  ``.prof``. The local.prof is mandatory and must point to a local boot
   config. The user running the scripts must have the right to write in
   pxelinux.cfg. I usually create a group and put it under control of
   the files under pxelinux.cfg.
@@ -49,7 +49,7 @@ reserved system name 'default'.
   to use apache instead of the little embedded server.
 
 - then your PXE scripts must access the following web page
-  http://<ipaddr>:<port>/localboot/ to request a local boot
+  ``http://<ipaddr>:<port>/localboot/`` to request a local boot
   before rebooting else the PXE boot will continue to loop on the same
   install.
 
@@ -57,7 +57,7 @@ Advanced
 --------
 
 - in your auto-install scripts, you can access the current profile by
-  accessing the following url: http://<ipaddr>:<port>/profile/
+  accessing the following url: ``http://<ipaddr>:<port>/profile/``
 
 Test system
 -----------
@@ -69,7 +69,7 @@ The test system allows to provide test scripts to running systems
 declared in the PXE manager database.
 
 The target system can request a test by using this url:
-http://<ipaddr>:<port>/nexttest/
+``http://<ipaddr>:<port>/nexttest/``
 
 The tests are usually shell scripts that are built using Django
 templating system. By convention, the tests are usinf a suffix of
@@ -80,7 +80,7 @@ must wait for some time and then exit to let the system send a new
 test if needed or send back a new wait.test.
 
 After the execution of a test script, the result is sent back to the
-server using the following url: http://<ipaddr>:<port>/upload/<test id>/. I
+server using the following url: ``http://<ipaddr>:<port>/upload/<test id>/``. I
 usualy run the following curl command to upload the result::
 
  curl --retry 0 -s -f -F "file=@$output" http://<ipaddr>:<port>/upload/<test id>/
@@ -95,7 +95,7 @@ tries to find the version of the system by looking for a line starting
 by 'V: '.
 
 You can then navigate on web pages displaying these parsed
-informations under: http://<ipaddr>:<port>/.
+informations under: ``http://<ipaddr>:<port>/``.
 
 Control
 +++++++
@@ -116,5 +116,5 @@ To display all the tests scheduled for a system, use::
 Web navigation
 ++++++++++++++
 
-By pointing your browser to http://<ipaddr>:<port>/, you can navigate
+By pointing your browser to ``http://<ipaddr>:<port>/``, you can navigate
 in the results of the test system.
