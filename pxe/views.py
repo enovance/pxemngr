@@ -64,7 +64,7 @@ def ipxe(request, mac):
     parsed['path'] = settings.IPXE_HTTP_ROOT
     label = parsed['DEFAULT']
     parsed['kernel'] = parsed[label]['KERNEL']
-    parsed['initrd'] = parsed[label]['APPEND']
+    parsed['initrd'] = parsed[label]['APPEND'].split('=', 1)[1]
     return HttpResponse('''#!ipxe
 
 kernel %(path)s/%(kernel)s
