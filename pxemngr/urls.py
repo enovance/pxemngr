@@ -16,6 +16,8 @@ urlpatterns = patterns('',
     (r'^localboot/$', 'pxe.views.localboot1'),
     (r'^profile/(?P<mac>[a-fA-F0-9:-]+)/$', 'pxe.views.profile'),
     (r'^profile/$', 'pxe.views.profile1'),
+    (r'^ipxe/(?P<mac>[a-fA-F0-9:-]+)/$', 'pxe.views.ipxe'),
+    (r'^ipxe/$', 'pxe.views.ipxe1'),
                        
     (r'^upload/(?P<logid>[0-9]+)/$', 'tester.views.upload_file'),
     (r'^nexttest/$', 'tester.views.next_test1'),
