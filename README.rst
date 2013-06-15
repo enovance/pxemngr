@@ -28,7 +28,8 @@ Install
   the files under pxelinux.cfg.
 
 - export these 2 environment variables::
-  DJANGO_SETTINGS_MODULE=settings and PYTHONPATH=$PWD.
+
+ DJANGO_SETTINGS_MODULE=pxemngr.settings and PYTHONPATH=$PWD.
 
 - run pxemngr syncbootnames to add the names of the PXE profiles in the
   database.
