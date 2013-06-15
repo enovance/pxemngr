@@ -1,6 +1,5 @@
--*- outline -*-
-
-* PXE Manager
+PXE Manager
+===========
 
 The idea is to build an automaton to control when to boot from the
 local drives and when to boot from the network.
@@ -12,7 +11,8 @@ system...
 
 The controlled systems must be configured to always boot over PXE.
 
-** Install
+Install
+-------
 
 - edit the database and PXE config in the settings.py according to
   your local setup.
@@ -27,24 +27,24 @@ The controlled systems must be configured to always boot over PXE.
   pxelinux.cfg. I usually create a group and put it under control of
   the files under pxelinux.cfg.
 
-- export these 2 environment variables:
+- export these 2 environment variables::
   DJANGO_SETTINGS_MODULE=settings and PYTHONPATH=$PWD.
 
 - run pxemngr syncbootnames to add the names of the PXE profiles in the
   database.
 
-- add the systems that you want to control by this system like this:
+- add the systems that you want to control by this system like this::
 
-pxemngr addsystem <name> <mac address> [<mac address 2>...]
+ pxemngr addsystem <name> <mac address> [<mac address 2>...]
 
-- set which profile you want your system to PXE boot:
+- set which profile you want your system to PXE boot::
 
-pxemngr nextboot <name> <profile name>
+ pxemngr nextboot <name> <profile name>
 
 If you want to assign a default profile to all systems, use the
 reserved system name 'default'.
 
-- run ./manage.py runserver <ip addr>:<port> to have a web server
+- run ``./manage.py runserver <ip addr>:<port>`` to have a web server
   waiting for requests to boot locally. You can also configure django
   to use apache instead of the little embedded server.
 
@@ -53,14 +53,17 @@ reserved system name 'default'.
   before rebooting else the PXE boot will continue to loop on the same
   install.
 
-** Advanced
+Advanced
+--------
 
 - in your auto-install scripts, you can access the current profile by
   accessing the following url: http://<ipaddr>:<port>/profile/
 
-** Test system
+Test system
+-----------
 
-*** Description
+Description
++++++++++++
 
 The test system allows to provide test scripts to running systems
 declared in the PXE manager database.
@@ -78,12 +81,12 @@ test if needed or send back a new wait.test.
 
 After the execution of a test script, the result is sent back to the
 server using the following url: http://<ipaddr>:<port>/upload/<test id>/. I
-usualy run the following curl command to upload the result:
+usualy run the following curl command to upload the result::
 
-curl --retry 0 -s -f -F "file=@$output" http://<ipaddr>:<port>/upload/<test id>/
+ curl --retry 0 -s -f -F "file=@$output" http://<ipaddr>:<port>/upload/<test id>/
 
 These uploaded files are stored under the directory set by the
-TEST_UPLOAD_DIR variable in settings.py.
+``TEST_UPLOAD_DIR`` variable in settings.py.
 
 The system uses a simple convention in these files to lookup
 information. It parses the lines to store informations, warnings and
@@ -94,22 +97,24 @@ by 'V: '.
 You can then navigate on web pages displaying these parsed
 informations under: http://<ipaddr>:<port>/.
 
-*** Control
+Control
++++++++
 
 To instruct the system about which tests are available, use the
-following command:
+following command::
 
-pxemngr synctestnames
+ pxemngr synctestnames
 
-To assign a test to a target system, use the following command:
+To assign a test to a target system, use the following command::
 
-pxemngr nexttest <system name> <test name>
+ pxemngr nexttest <system name> <test name>
 
-To display all the tests scheduled for a system, use:
+To display all the tests scheduled for a system, use::
 
-pxemngr dpytest <system name>
+ pxemngr dpytest <system name>
 
-*** Web navigation
+Web navigation
+++++++++++++++
 
 By pointing your browser to http://<ipaddr>:<port>/, you can navigate
 in the results of the test system.
