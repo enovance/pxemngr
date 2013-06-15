@@ -10,7 +10,6 @@
 """Reports the list of systems or displays informations about one system."""
 
 import sys
-import settings
 from pxe.models import *
 from pxe.common import *
 

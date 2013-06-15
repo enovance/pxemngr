@@ -8,11 +8,13 @@
 
 """Common functions used by scripts and web logic."""
 
-import sys
+from django.http import Http404
 import os
 import re
-import settings
-from pxe.models import *
+import sys
+
+import pxemngr.settings as settings
+from pxe.models import BootName, MacAddress, Log
 
 _MAC_REGEXP = re.compile('^.*\s([0-9a-f:]+)\s.*', re.I)
 _IP_REGEXP = re.compile('^([0-9.]+).*\s[0-9a-f:]+\s.*', re.I)

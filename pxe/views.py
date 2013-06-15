@@ -8,9 +8,10 @@
 #---------------------------------------------------------------
 
 from django.http import HttpResponse, Http404
-from django.shortcuts import get_object_or_404
-from pxe.common import *
-from pxe.models import *
+
+import pxemngr.settings as settings
+from pxe.common import get_mac, simplify_mac, mac2filename, create_symlink, set_next_boot
+from pxe.models import Log, System
 
 def get_system(request, mac):
     try:

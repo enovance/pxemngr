@@ -9,8 +9,9 @@
 #---------------------------------------------------------------
 
 import os
-import settings
+
 from tester.models import *
+import pxemngr.settings as settings
 
 l = len(settings.TEST_SUFFIX)
 list = []

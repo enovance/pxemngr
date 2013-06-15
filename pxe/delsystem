@@ -9,9 +9,10 @@
 #---------------------------------------------------------------
 
 import sys
-from pxe.models import *
-import settings
+
 from pxe.common import *
+from pxe.models import *
+import pxemngr.settings as settings
 
 if len(sys.argv) != 2:
     error('Usage: %s <system name>' % sys.argv[0])

@@ -11,7 +11,7 @@
 
 import sys
 import os
-import settings
+
 from pxe.models import *
 from tester.models import *
 from pxe.common import *

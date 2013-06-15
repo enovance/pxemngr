@@ -1,16 +1,16 @@
-from django.conf.urls.defaults import *
+from django.conf.urls import patterns, include, url
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    # Example:
-    # (r'^pxemngr/', include('pxemngr.foo.urls')),
+    # Examples:
+    # url(r'^$', 'pxemngr.views.home', name='home'),
+    # url(r'^pxemngr/', include('pxemngr.foo.urls')),
 
-    # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
-    # to INSTALLED_APPS to enable admin documentation:
-    # (r'^admin/doc/', include('django.contrib.admindocs.urls')),
+    # Uncomment the admin/doc line below to enable admin documentation:
+    # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     (r'^localboot/(?P<mac>[a-fA-F0-9:-]+)/$', 'pxe.views.localboot'),
     (r'^localboot/$', 'pxe.views.localboot1'),
@@ -30,5 +30,5 @@ urlpatterns = patterns('',
     (r'^testname/(?P<tstid>[0-9]+)/$', 'tester.views.testname'),
 
     # Uncomment the next line to enable the admin:
-    (r'^admin/(.*)', admin.site.root),
+    url(r'^admin/', include(admin.site.urls)),
 )

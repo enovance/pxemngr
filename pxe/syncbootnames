@@ -10,9 +10,10 @@
 #---------------------------------------------------------------
 
 import os
-import settings
+
 from pxe.models import *
 from pxe.common import *
+import pxemngr.settings as settings
 
 l = len(settings.PXE_SUFFIX)
 list = []

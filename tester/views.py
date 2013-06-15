@@ -5,6 +5,7 @@ from django.core.servers.basehttp import FileWrapper
 from forms import UploadFileForm
 from pxe.common import *
 from tester.models import *
+import pxemngr.settings as settings
 
 def upload_file(request, logid):
     print 'upload_file', logid

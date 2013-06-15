@@ -10,7 +10,7 @@
 #---------------------------------------------------------------
 
 import sys
-import settings
+
 from pxe.models import *
 from pxe.common import *
 from tester.models import *
