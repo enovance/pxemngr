@@ -30,7 +30,7 @@ PXE_ROOT='/var/lib/tftpboot/pxelinux.cfg'
 PXE_PROFILES = 'profiles'
 PXE_SUFFIX = '.prof'
 PXE_LOCAL = 'local'
-IPXE_HTTP_ROOT = '/edeploy/images/pxeboot'
+IPXE_HTTP_ROOT = 'http://10.0.3.1/edeploy/images/pxeboot'
 
 # test related settings
 

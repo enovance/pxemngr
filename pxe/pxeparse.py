@@ -17,6 +17,7 @@ def parse(pxe_entry):
     for section in _TWO_LINES_REGEXP.split(pxe_entry):
         title = None
         for line in section.split('\n'):
+            line = line.strip()
             try:
                 key, value = line.split(' ', 1)
             except ValueError:
@@ -24,12 +25,14 @@ def parse(pxe_entry):
                     continue
                 raise
             if not title:
-                if key in ('DEFAULT', 'prompt', 'timeout'):
-                    res[key] = value
-                elif key == 'LABEL':
+                if key.lower() in ('default', 'prompt', 'timeout'):
+                    res[key.lower()] = value
+                elif key.lower() == 'label':
                     title = value
                     res[title] = {}
             else:
+                if key.lower() in ('kernel', 'append', 'localboot'):
+                    key = key.lower()
                 res[title][key] = value
     return res
 

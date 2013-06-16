@@ -8,6 +8,7 @@
 #---------------------------------------------------------------
 
 from django.http import HttpResponse, Http404
+import os
 
 import pxemngr.settings as settings
 from pxe.common import get_mac, simplify_mac, mac2filename, create_symlink, set_next_boot
@@ -27,6 +28,7 @@ def get_system(request, mac):
             return System.objects.get(macaddress__mac=''.join(l[0:i]))
         except System.DoesNotExist:
             pass
+    print 'No system defined for %s (%s)' % (mac, addr)
     raise Http404
 
 def localboot1(request):
@@ -54,20 +56,27 @@ def ipxe1(request):
     return ipxe(request, get_mac(request))
 
 def ipxe(request, mac):
-    system = get_system(request, mac)
-    log = Log.objects.filter(system=system).order_by('-date')[0]
-    pxe_entry = open('%s/%s/%s%s' % (settings.PXE_ROOT,
-                                     settings.PXE_PROFILES,
-                                     log.boot_name.name,
-                                     settings.PXE_SUFFIX)).read(-1)
+    filename = os.path.join(settings.PXE_ROOT, mac2filename(simplify_mac(mac)))
+    if not os.path.exists(filename):
+        print 'switching to default profile for', mac
+        print filename
+        filename = os.path.join(settings.PXE_ROOT, 'default')
+    pxe_entry = open(filename).read(-1)
     parsed = pxeparse.parse(pxe_entry)
     parsed['path'] = settings.IPXE_HTTP_ROOT
-    label = parsed['DEFAULT']
-    parsed['kernel'] = parsed[label]['KERNEL']
-    parsed['initrd'] = parsed[label]['APPEND'].split('=', 1)[1]
-    return HttpResponse('''#!ipxe
+    label = parsed['default']
+    if 'localboot' in parsed[label]:
+        return HttpResponse('''#!ipxe
 
-kernel %(path)s/%(kernel)s
+sanboot --no-describe --drive 0x%x
+''' % (0x80 + int(parsed[label]['localboot'],)),
+                            mimetype="text/plain")
+    else:
+        parsed['kernel'] = parsed[label]['kernel']
+        parsed['initrd'], parsed['args'] = parsed[label]['append'].split('=', 1)[1].split(' ', 1)
+        return HttpResponse('''#!ipxe
+
+kernel %(path)s/%(kernel)s %(args)s
 initrd %(path)s/%(initrd)s
 boot
 ''' % parsed,
