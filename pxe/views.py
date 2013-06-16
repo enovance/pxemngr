@@ -58,8 +58,6 @@ def ipxe1(request):
 def ipxe(request, mac):
     filename = os.path.join(settings.PXE_ROOT, mac2filename(simplify_mac(mac)))
     if not os.path.exists(filename):
-        print 'switching to default profile for', mac
-        print filename
         filename = os.path.join(settings.PXE_ROOT, 'default')
     pxe_entry = open(filename).read(-1)
     parsed = pxeparse.parse(pxe_entry)
