@@ -27,22 +27,18 @@
     django_manage: app_path=/srv/pxemngr command=syncdb
   - name : ensure needed files and directories are correct
     file: path=/var/lib/tftpboot/pxelinux.cfg/profiles state=directory
+  - name : ensure needed files and directories are correct
     file: path=/var/lib/tftpboot/pxelinux.cfg owner=www-data group=www-data mode=0755 state=directory
+  - name : ensure needed files and directories are correct
     file: src=/srv/pxemngr/pxe/pxemngr dest=/usr/bin/pxemngr state=link
   - name: create local PXE role
     copy: src=local.prof dest=/var/lib/tftpboot/pxelinux.cfg/profiles/local.prof
-    notify: sync bootnames
     notify: set default PXE boot to local
   - name: create apache config file
     copy: src=pxemngr-apache.conf dest=/etc/apache2/sites-available/pxemngr
     notify: enable pxemngr site
-    notify: restart apache
   handlers:
-    - name: sync bootnames
-      command: pxemngr syncbootnames
     - name: set default PXE boot to local
-      command: pxemngr nextboot default local
+      shell: pxemngr syncbootnames; pxemngr nextboot default local
     - name: enable pxemngr site
-      command: a2ensite pxemngr
-    - name: restart apache
-      service: name=apache2 state=restarted
+      shell: a2ensite pxemngr; service apache2 restart
