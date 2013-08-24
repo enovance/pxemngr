@@ -1,0 +1,48 @@
+---
+- hosts: pxemngrservers
+  user: root
+  tasks:
+  - name: ensure needed packages for pxemngr are installed
+    apt: pkg={{ item }} state=present
+    with_items:
+      - apache2
+      - libapache2-mod-wsgi
+      - python-ipaddr
+      - python-pip
+      - git
+  - name: ensure python-django package is not installed
+    apt: pkg=python-django state=absent
+  - name: install Django from pip
+    pip: name=django
+  - name: extract pxemngr git repo
+    git: repo=https://github.com/enovance/pxemngr.git
+         dest=/srv/pxemngr update=no
+  - name: Ensure /etc/pxemngr.conf is right
+    lineinfile: dest=/etc/pxemngr.conf regexp=^BASEDIR= line=BASEDIR=/srv/pxemngr create=yes
+  - name: Inject import sys in /srv/pxemngr/pxemngr/wsgi.py
+    lineinfile: dest=/srv/pxemngr/pxemngr/wsgi.py regexp="import sys" insertafter='^import' line="import sys" state=present
+  - name: fix path in /srv/pxemngr/pxemngr/wsgi.py
+    lineinfile: dest=/srv/pxemngr/pxemngr/wsgi.py regexp=sys.path insertafter='import sys' line="sys.path = ['/srv/pxemngr'] + sys.path" state=present
+  - name: create pxemngr database
+    django_manage: app_path=/srv/pxemngr command=syncdb
+  - name : ensure needed files and directories are correct
+    file: path=/var/lib/tftpboot/pxelinux.cfg/profiles state=directory
+    file: path=/var/lib/tftpboot/pxelinux.cfg owner=www-data group=www-data mode=0755 state=directory
+    file: src=/srv/pxemngr/pxe/pxemngr dest=/usr/bin/pxemngr state=link
+  - name: create local PXE role
+    copy: src=local.prof dest=/var/lib/tftpboot/pxelinux.cfg/profiles/local.prof
+    notify: sync bootnames
+    notify: set default PXE boot to local
+  - name: create apache config file
+    copy: src=pxemngr-apache.conf dest=/etc/apache2/sites-available/pxemngr
+    notify: enable pxemngr site
+    notify: restart apache
+  handlers:
+    - name: sync bootnames
+      command: pxemngr syncbootnames
+    - name: set default PXE boot to local
+      command: pxemngr nextboot default local
+    - name: enable pxemngr site
+      command: a2ensite pxemngr
+    - name: restart apache
+      service: name=apache2 state=restarted
