@@ -14,7 +14,7 @@ import re
 import sys
 
 import pxemngr.settings as settings
-from pxe.models import BootName, MacAddress, Log
+from pxe.models import BootName, MacAddress, Log, System
 
 _MAC_REGEXP = re.compile('^.*\s([0-9a-f:]+)\s.*', re.I)
 _IP_REGEXP = re.compile('^([0-9.]+).*\s[0-9a-f:]+\s.*', re.I)
@@ -98,7 +98,9 @@ def set_next_boot(system, name, abort=True):
     for m in MacAddress.objects.filter(system=system):
         dst = mac2path(m.mac)
         create_symlink(system.name, dst)
-        
+        # handle aliases
+        for syst in System.objects.filter(macaddress__mac=m.mac).exclude(name=system.name):
+            create_symlink(system.name, os.path.join(settings.PXE_ROOT, syst.name))
     if system.name == 'default':
         create_symlink(prof, '%s/default' % (settings.PXE_ROOT))
 

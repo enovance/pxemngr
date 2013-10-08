@@ -31,10 +31,7 @@ for addr in sys.argv[2:]:
     else:
         a = simplify_mac(addr)
     try:
-        mac = MacAddress.objects.get(mac=a)
-        if mac.system != system:
-            mac.system = system
-            mac.save()
+        mac = MacAddress.objects.get(mac=a, system=system)
     except MacAddress.DoesNotExist:
         mac = MacAddress(mac=a, system=system)
         mac.save()
