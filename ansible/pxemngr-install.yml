@@ -19,6 +19,8 @@
          dest=/srv/pxemngr update=no
   - name: Ensure /etc/pxemngr.conf is right
     lineinfile: dest=/etc/pxemngr.conf regexp=^BASEDIR= line=BASEDIR=/srv/pxemngr create=yes
+  - name: Ensure /etc/pxemngr.conf permissions
+    file: dest=/etc/pxemngr.conf mode=0644
   - name: Inject import sys in /srv/pxemngr/pxemngr/wsgi.py
     lineinfile: dest=/srv/pxemngr/pxemngr/wsgi.py regexp="import sys" insertafter='^import' line="import sys" state=present
   - name: fix path in /srv/pxemngr/pxemngr/wsgi.py
