@@ -36,11 +36,15 @@
   - name: create local PXE role
     copy: src=local.prof dest=/var/lib/tftpboot/pxelinux.cfg/profiles/local.prof
     notify: set default PXE boot to local
-  - name: create apache config file
-    copy: src=pxemngr-apache.conf dest=/etc/apache2/sites-available/pxemngr
+  - name: enable wsgi in apache
+    lineinfile: dest=/etc/apache2/sites-available/default
+                regexp='WSGIScriptAlias /pxemngr/ /srv/pxemngr/pxemngr/wsgi.py'
+                insertbefore='</VirtualHost>'
+                line='        WSGIScriptAlias /pxemngr/ /srv/pxemngr/pxemngr/wsgi.py'
+                state=present
     notify: enable pxemngr site
   handlers:
     - name: set default PXE boot to local
       shell: pxemngr syncbootnames; pxemngr nextboot default local
     - name: enable pxemngr site
-      shell: a2ensite pxemngr; service apache2 restart
+      shell: service apache2 restart
