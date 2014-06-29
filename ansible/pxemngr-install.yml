@@ -38,25 +38,9 @@
     notify: set default PXE boot to local
   - name: enable pxemngr site in apache
     copy: src=pxemngr-apache.conf dest=/etc/apache2/sites-available/pxemngr
-    when: ansible_os_family == "Debian"
-    notify: enable pxemngr site under Debian
-  - name: enable pxemngr site in apache
-    copy: src=pxemngr-apache.conf dest=/etc/httpd/conf.d/pxemngr.conf
-    when: ansible_os_family != "Debian"
     notify: enable pxemngr site
-    when: ansible_distribution == 'Debian' or ansible_distribution_version == '12.04'
-  - name: enable wsgi in apache
-    lineinfile: dest=/etc/apache2/sites-available/000-default.conf
-                regexp='WSGIScriptAlias /pxemngr/ /srv/pxemngr/pxemngr/wsgi.py'
-                insertbefore='</VirtualHost>'
-                line='        WSGIScriptAlias /pxemngr/ /srv/pxemngr/pxemngr/wsgi.py'
-                state=present
-    notify: enable pxemngr site
-    when: ansible_distribution_version == '14.04'
   handlers:
     - name: set default PXE boot to local
       shell: pxemngr syncbootnames; pxemngr nextboot default local
-    - name: enable pxemngr site under Debian
-      shell: a2ensite pxemngr; service apache2 restart
     - name: enable pxemngr site
-      shell: service httpd restart
+      shell: a2ensite pxemngr; service apache2 restart
