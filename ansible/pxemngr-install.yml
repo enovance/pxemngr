@@ -2,7 +2,7 @@
 - hosts: pxemngrservers
   user: root
   tasks:
-  - name: ensure needed packages for pxemngr are installed
+  - name: ensure needed packages for pxemngr are installed (apt)
     apt: pkg={{ item }} state=present update_cache=yes
     with_items:
       - apache2
@@ -10,8 +10,22 @@
       - python-ipaddr
       - python-pip
       - git
-  - name: ensure python-django package is not installed
+    when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  - name: ensure needed packages for pxemngr are installed (yum)
+    yum: pkg={{ item }} state=present
+    with_items:
+      - httpd
+      - mod_wsgi
+      - python-ipaddr
+      - python-pip
+      - git
+    when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+  - name: ensure python-django package is not installed (apt)
     apt: pkg=python-django state=absent
+    when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  - name: ensure python-django package is not installed (yum)
+    yum: pkg=python-django state=absent
+    when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
   - name: install Django from pip
     pip: name=django
   - name: extract pxemngr git repo
@@ -29,16 +43,24 @@
     django_manage: app_path=/srv/pxemngr command=syncdb
   - name : ensure needed files and directories are correct
     file: path=/var/lib/tftpboot/pxelinux.cfg/profiles state=directory
-  - name : ensure needed files and directories are correct
+  - name : ensure needed files and directories are correct (www-data)
     file: path=/var/lib/tftpboot/pxelinux.cfg owner=www-data group=www-data mode=0755 state=directory
+    when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  - name : ensure needed files and directories are correct (apache)
+    file: path=/var/lib/tftpboot/pxelinux.cfg owner=apache group=apache mode=0755 state=directory
+    when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
   - name : ensure needed files and directories are correct
     file: src=/srv/pxemngr/pxe/pxemngr dest=/usr/bin/pxemngr state=link
   - name: create local PXE role
     copy: src=local.prof dest=/var/lib/tftpboot/pxelinux.cfg/profiles/local.prof
     notify: set default PXE boot to local
-  - name: enable pxemngr site in apache
+  - name: enable pxemngr site in apache (deb)
     copy: src=pxemngr-apache.conf dest=/etc/apache2/sites-available/pxemngr
     notify: enable pxemngr site
+    when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  - name: enable pxemngr site in apache (rhel)
+    copy: src=pxemngr-apache.conf dest=/etc/httpd/conf.d/pxemngr.conf
+    when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
   handlers:
     - name: set default PXE boot to local
       shell: pxemngr syncbootnames; pxemngr nextboot default local
