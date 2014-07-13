@@ -19,13 +19,13 @@
       - python-ipaddr
       - python-pip
       - git
-    when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+    when: ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat'
   - name: ensure python-django package is not installed (apt)
     apt: pkg=python-django state=absent
     when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
   - name: ensure python-django package is not installed (yum)
     yum: pkg=python-django state=absent
-    when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+    when: ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat'
   - name: install Django from pip
     pip: name=django
   - name: extract pxemngr git repo
@@ -48,7 +48,7 @@
     when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
   - name : ensure needed files and directories are correct (apache)
     file: path=/var/lib/tftpboot/pxelinux.cfg owner=apache group=apache mode=0755 state=directory
-    when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+    when: ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat'
   - name : ensure needed files and directories are correct
     file: src=/srv/pxemngr/pxe/pxemngr dest=/usr/bin/pxemngr state=link
   - name: create local PXE role
@@ -60,7 +60,7 @@
     when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
   - name: enable pxemngr site in apache (rhel)
     copy: src=pxemngr-apache.conf dest=/etc/httpd/conf.d/pxemngr.conf
-    when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+    when: ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat'
   handlers:
     - name: set default PXE boot to local
       shell: pxemngr syncbootnames; pxemngr nextboot default local
