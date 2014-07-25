@@ -59,7 +59,7 @@
     notify: enable pxemngr site
     when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
   - name: enable pxemngr site in apache (rhel)
-    copy: src=pxemngr-apache.conf dest=/etc/httpd/conf.d/pxemngr.conf
+    copy: src=pxemngr-httpd.conf dest=/etc/httpd/conf.d/pxemngr.conf
     when: ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat'
   handlers:
     - name: set default PXE boot to local
