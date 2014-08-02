@@ -41,6 +41,12 @@
     lineinfile: dest=/srv/pxemngr/pxemngr/wsgi.py regexp=sys.path insertafter='import sys' line="sys.path = ['/srv/pxemngr'] + sys.path" state=present
   - name: create pxemngr database
     django_manage: app_path=/srv/pxemngr command=syncdb
+  - name : /var/lib/pxemngr (deb)
+    file: path=/var/lib/pxemngr state=directory owner=www-data group=www-data
+    when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  - name : /var/lib/pxemngr (rhel)
+    file: path=/var/lib/pxemngr state=directory owner=apache group=apache
+    when: ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat'
   - name : ensure needed files and directories are correct
     file: path=/var/lib/tftpboot/pxelinux.cfg/profiles state=directory
   - name : ensure needed files and directories are correct (www-data)
