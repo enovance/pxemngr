@@ -14,6 +14,10 @@ framework.
 
 """
 import os
+import sys
+
+sys.path = [os.path.abspath(
+    os.path.join(os.path.dirname(__file__), '..'))] + sys.path
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pxemngr.settings")
 
@@ -21,8 +25,5 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pxemngr.settings")
 # file. This includes Django's development server, if the WSGI_APPLICATION
 # setting points here.
 from django.core.wsgi import get_wsgi_application
-application = get_wsgi_application()
 
-# Apply WSGI middleware here.
-# from helloworld.wsgi import HelloWorldApplication
-# application = HelloWorldApplication(application)
+application = get_wsgi_application()
