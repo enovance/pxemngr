@@ -22,7 +22,7 @@ _IP_REGEXP = re.compile('^([0-9.]+).*\s[0-9a-f:]+\s.*', re.I)
 def ip_to_mac(ip):
     """Lookup a MAC address from an IPV4 address on a live Linux system."""
     for line in open('/proc/net/arp').readlines():
-        if line.find(ip) != -1:
+        if line.find(ip + ' ') == 0:
             res = _MAC_REGEXP.search(line)
             if res:
                 return res.group(1)
