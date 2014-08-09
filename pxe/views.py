@@ -44,7 +44,7 @@ def nextboot1(request, boot_name):
 def nextboot(request, mac, boot_name):
     print 'nextboot', mac, boot_name
     systems = System.objects.filter(macaddress__mac=simplify_mac(mac))
-    if len(systems) > 1:
+    if len(systems) > 0:
         set_next_boot(systems[0], boot_name)
     else:
         fn = '%s/%s' % (settings.PXE_ROOT, mac2filename(simplify_mac(mac)))
