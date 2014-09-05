@@ -27,7 +27,7 @@
     yum: pkg=python-django state=absent
     when: ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat'
   - name: install Django from pip
-    pip: name=django
+    pip: name=django version=1.6.5
   - name: extract pxemngr git repo
     git: repo=https://github.com/enovance/pxemngr.git
          dest=/srv/pxemngr update=no
