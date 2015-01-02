@@ -11,6 +11,10 @@
       - python-pip
       - git
     when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  # packaging only manages the user in specifying a GID while the group does not
+  # exist.
+  - group: name=apache state=present gid=48 system=yes
+    when: ansible_distribution == 'CentOS'
   - name: ensure needed packages for pxemngr are installed (yum)
     yum: pkg={{ item }} state=present
     with_items:
