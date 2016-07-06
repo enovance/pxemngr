@@ -14,7 +14,7 @@ from pxe.models import *
 from pxe.common import *
 
 if len(sys.argv) < 3:
-    error('Usage: %s <system name> <MAC> [<MAC2>...]' % sys.argv[0])
+    error('Usage: pxemngr addsystem <system name> <MAC> [<MAC2>...]')
 
 if sys.argv[1] == 'default':
     error('default is a reserved name and cannot be used for a system name')

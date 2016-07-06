@@ -17,7 +17,7 @@ from pxe.common import *
 import pxemngr.settings as settings
 
 if len(sys.argv) != 3:
-    error('Usage: %s <system name> <boot name>' % sys.argv[0])
+    error('Usage: pxemngr nextboot <system name> <boot name>')
 
 name = sys.argv[1]
 

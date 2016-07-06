@@ -27,7 +27,7 @@ print_subcommands() {
 }
 
 if [ $# -lt 1 ]; then
-    echo "Usage: `basename $0` <sub-command> [<args>...]" 1>&2
+    echo "Usage: pxemngr <sub-command> [<args>...]" 1>&2
     print_subcommands
     exit 1
 fi
