@@ -29,7 +29,7 @@ def set_next_test(system, name, abort=True):
     log.save()
 
 if len(sys.argv) < 3:
-    error('Usage: %s <system name> <test name> [<test name2>...]' % sys.argv[0])
+    error('Usage: pxemngr nexttest <system name> <test name> [<test name2>...]')
 
 try:
     system = System.objects.get(name=sys.argv[1])

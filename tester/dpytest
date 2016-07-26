@@ -16,7 +16,7 @@ from pxe.common import *
 from tester.models import *
 
 if len(sys.argv) != 2:
-    error('Usage: %s <system name>|-l' % sys.argv[0])
+    error('Usage: pxemngr dpytest <system name>|-l')
 
 if sys.argv[1] == '-l':
     for s in TestName.objects.all():

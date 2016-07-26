@@ -15,7 +15,7 @@ from pxe.models import *
 import pxemngr.settings as settings
 
 if len(sys.argv) != 2:
-    error('Usage: %s <system name>' % sys.argv[0])
+    error('Usage: pxemngr delsystem <system name>')
 
 try:
     system = System.objects.get(name=sys.argv[1])
