@@ -57,7 +57,7 @@
     copy: src=local.prof dest=/var/lib/tftpboot/pxelinux.cfg/profiles/local.prof
     notify: set default PXE boot to local
   - name: enable pxemngr site in apache (deb)
-    copy: src=pxemngr-apache.conf dest=/etc/apache2/sites-available/pxemngr
+    copy: src=pxemngr-apache.conf dest=/etc/apache2/sites-available/pxemngr.conf
     notify: enable pxemngr site
     when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
   - name: enable pxemngr site in apache (rhel)
